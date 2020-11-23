@@ -1,0 +1,17 @@
+<div class="container">
+  <div class="row mt-5">
+    <div class="col-md-12">
+      <h1>Initialize</h1>
+    </div>
+    <div class="col-md-12 text-left mt-5">
+      <button
+        type="button"
+        class="btn btn-warning"
+        [disabled]="loading"
+        (click)="onInitialize()"
+      >
+      {{ loading ? "Loading..." : 'Initialize' }}
+      </button>
+    </div>
+  </div>
+</div>

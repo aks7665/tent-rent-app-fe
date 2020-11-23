@@ -1,0 +1,97 @@
+<div class="row mt-5">
+  <div class="col-md-4 offset-md-4 text-center">
+    <h1>Transaction Create</h1>
+  </div>
+</div>
+<div class="row mt-5">
+  <div class="col-md-4 offset-md-4">
+    <form (ngSubmit)="onSubmit(productForm)" #productForm="ngForm">
+      <div class="row">
+        <div class="col-md-12">
+          <mat-form-field class="example-full-width">
+            <mat-label>Select product</mat-label>
+            <mat-select name="productId" ngModel required>
+              <mat-option
+                *ngFor="let product of products$ | async"
+                [value]="product._id"
+              >
+                {{ product.title | titlecase }}
+              </mat-option>
+            </mat-select>
+            <mat-error> Select product. </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-md-12">
+          <mat-form-field class="example-full-width">
+            <mat-label>Select customer</mat-label>
+            <mat-select name="customerId" ngModel required>
+              <mat-option
+                *ngFor="let customer of customers$ | async"
+                [value]="customer._id"
+              >
+                {{ customer.name | titlecase }}
+              </mat-option>
+            </mat-select>
+            <mat-error> Select customer. </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-md-12">
+          <mat-form-field class="example-full-width">
+            <mat-label>Quantity</mat-label>
+            <input matInput name="quantity" ngModel pattern="[0-9]+" required />
+            <mat-error>
+              <span
+                *ngIf="
+                  productForm?.controls.quantity?.hasError('pattern') &&
+                  !productForm?.controls.quantity?.hasError('required')
+                "
+                >Quantity is invalid.</span
+              >
+              <span *ngIf="productForm?.controls.quantity?.hasError('required')"
+                >Quantity is required.</span
+              >
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-md-12">
+          <mat-form-field class="example-full-width">
+            <mat-label>Type</mat-label>
+            <mat-select name="transationType" ngModel required #tranType>
+              <mat-option [value]="'out'"> Out </mat-option>
+              <mat-option
+                [value]="'in'"
+                *ngIf="(transactions$ | async).length > 0"
+              >
+                In
+              </mat-option>
+            </mat-select>
+            <mat-error> Select type. </mat-error>
+            <mat-hint
+              >In type is displayed when returnable transaction is
+              available.</mat-hint
+            >
+          </mat-form-field>
+        </div>
+        <div class="col-md-12" *ngIf="tranType.value === 'in'">
+          <mat-form-field class="example-full-width">
+            <mat-label>Parent Transaction ID</mat-label>
+            <mat-select name="transationIdParent" ngModel required>
+              <mat-option
+                *ngFor="let transactions of transactions$ | async"
+                [value]="transactions._id"
+              >
+                {{ transactions.transationId }}
+              </mat-option>
+            </mat-select>
+            <mat-error> Select type. </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-md-12 text-center mt-3">
+          <button class="btn btn-primary" [disabled]="loading">
+            {{ loading ? "Loading..." : "Create" }}
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

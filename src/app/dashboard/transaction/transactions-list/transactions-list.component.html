@@ -1,0 +1,45 @@
+<div class="container">
+  <div class="row mt-5">
+    <div class="col-md-10">
+      <h1>Transactions</h1>
+    </div>
+    <div class="col-md-2 text-right">
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="redirectTo(['dashboard', 'transactions', 'create'])"
+      >
+        Add new transaction
+      </button>
+    </div>
+  </div>
+  <div class="row mt-3" *ngIf="(transactions$ | async).length > 0; else noProducts">
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">ID</th>
+          <th scope="col">Product Name</th>
+          <th scope="col">Quantity</th>
+          <th scope="col">Customer Name</th>
+          <th scope="col">Parent ID</th>
+          <th scope="col">Created At</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let transaction of transactions$ | async; let i = index">
+          <th scope="row">{{ transaction?.transationId }}</th>
+          <td>{{ (transaction?.productData?.title || '-') | titlecase }}</td>
+          <td>{{ (transaction?.quantity || 0) | number }}</td>
+          <td>{{ (transaction?.customerData?.name || '-') | titlecase }}</td>
+          <td>{{ transaction?.transactionParentData?.transationId || '-' }}</td>
+          <td>{{ transaction?.createdAt | date }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <ng-template #noProducts>
+    <div class="row text-center mt-3">
+      <div class="col-md-12">No transaction records found.</div>
+    </div>
+  </ng-template>
+</div>

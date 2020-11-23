@@ -1,0 +1,102 @@
+<mat-tab-group mat-stretch-tabs class="example-stretched-tabs mat-elevation-z4">
+  <mat-tab label="Inventory Summary Report">
+    <div #content>
+      <div class="row mt-3" *ngIf="products.length > 0; else noProducts">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">Item Name</th>
+              <th scope="col">Available Quantity</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let product of products; let i = index">
+              <td>{{ product?.title || "-" | titlecase }}</td>
+              <td>{{ product?.quantity || 0 | number }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <ng-template #noProducts>
+      <div class="row text-center mt-3">
+        <div class="col-md-12">No products data found.</div>
+      </div>
+    </ng-template>
+    <div class="ml-5 mb-2 mt-1">
+      <!-- <button type="button" class="btn btn-secondary" (click)="exportAsPDF('InvSumRep');">Export as PDF</button> -->
+    </div>
+  </mat-tab>
+  <mat-tab label="Inventory Detailed Report">
+    <!-- <div class="card mb-3" *ngFor="let product of products">
+      <div class="card-body">
+        <div>Item Name: {{ product?.title | titlecase }}</div>
+        <div>Available Quantity: {{ product?.quantity | number }}</div>
+      </div>
+      <div class="row" *ngFor="let transaction of getTransationByProductId(product?._id); let i=index">
+        <div class="col-md-12 ml-4">
+          <div class="row" *ngIf="i === 0">
+            <div class="col-md-3">
+              Transaction Id
+            </div>
+            <div class="col-md-4">
+              Date/time
+            </div>
+            <div class="col-md-2">
+              Transaction Id
+            </div>
+            <div class="col-md-3">
+              Quantity
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-3">
+              {{ transaction?.transationId }}
+            </div>
+            <div class="col-md-4">
+              {{ transaction?.createdAt | date:'y-MM-y HH:mm:ss'}}
+            </div>
+            <div class="col-md-2">
+              {{ transaction?.transationType | uppercase }}
+            </div>
+            <div class="col-md-3">
+              {{ transaction?.quantity | number }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div> -->
+    <table width="100%">
+      <ng-container *ngFor="let product of products">
+        <tr>
+          <td>Item Name: {{ product?.title | titlecase }}</td>
+        </tr>
+        <tr>
+          <td>Available Quantity: {{ product?.quantity | number }}</td>
+        </tr>
+        <tr *ngIf="getTransationByProductId(product?._id).length > 0">
+          <td>
+            <table width="60%">
+              <tr>
+                <th>Transaction Id</th>
+                <th>Date/time</th>
+                <th>Transaction Id</th>
+                <th>Quantity</th>
+              </tr>
+              <tr *ngFor="let transaction of getTransationByProductId(product?._id); let i=index">
+                <td>{{ transaction?.transationId }}</td>
+                <td>{{ transaction?.createdAt | date:'y-MM-y HH:mm:ss'}}<td>
+                <td>{{ transaction?.transationType | uppercase }}</td>
+                <td>{{ transaction?.quantity | number }}</td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        -------------
+      </ng-container>
+
+    </table>
+  </mat-tab>
+</mat-tab-group>
+
+<!-- <button (click)="downloadPDF()">Export To PDF</button> -->
