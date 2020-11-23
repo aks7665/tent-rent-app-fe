@@ -2,7 +2,7 @@
   <mat-tab label="Inventory Summary Report">
     <div #content>
       <div class="row mt-3 ml-5 mb-3">
-        <button class="btn btn-secondary" (click)="downloadPDF()">Export as PDF</button>
+        <button class="btn btn-secondary" (click)="downloadReport()">Export as PDF</button>
       </div>
       <div class="row mt-2" *ngIf="products.length > 0; else noProducts">
         <table class="table">
@@ -28,8 +28,10 @@
     </ng-template>
   </mat-tab>
   <mat-tab label="Inventory Detailed Report">
-
-    <table width="100%">
+    <div class="row mt-3 ml-5 mb-3">
+      <button class="btn btn-secondary" (click)="downloadDetailReport()">Export as PDF</button>
+    </div>
+    <table width="80%" class="ml-5">
       <ng-container *ngFor="let product of products">
         <tr>
           <td>Item Name: {{ product?.title | titlecase }}</td>
@@ -48,7 +50,7 @@
               </tr>
               <tr *ngFor="let transaction of getTransationByProductId(product?._id); let i=index">
                 <td>{{ transaction?.transationId }}</td>
-                <td>{{ transaction?.createdAt | date:'y-MM-y HH:mm:ss'}}<td>
+                <td>{{ transaction?.createdAt | date:'y-MM-dd HH:mm:ss'}}<td>
                 <td>{{ transaction?.transationType | uppercase }}</td>
                 <td>{{ transaction?.quantity | number }}</td>
               </tr>
