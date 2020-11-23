@@ -5,11 +5,10 @@ import { Observable } from 'rxjs';
 import { Product } from 'src/app/models/product.model';
 import { AppState } from 'src/app/store';
 import { fetchAllProducts } from 'src/app/store/product/product.selectors';
-// import { jsPDF } from 'jspdf';
-// import html2canvas from 'html2canvas';
-// import jsPDF from 'jspdf';
+
 import { fetchAllTransactions } from 'src/app/store/transaction/transaction.selectors';
 import { Transaction } from 'src/app/models/transaction.model';
+import { PdfHelperService } from 'src/app/shared/helper/pdf-helper.service';
 
 @Component({
   selector: 'app-report',
@@ -21,7 +20,11 @@ export class ReportComponent implements OnInit {
   products: Product[] = [];
   transactions: Transaction[];
 
-  constructor(private store: Store<AppState>, private router: Router) {}
+  constructor(
+    private store: Store<AppState>,
+    private router: Router,
+    private pdfHelperService: PdfHelperService
+  ) {}
 
   ngOnInit(): void {
     this.store.pipe(select(fetchAllProducts)).subscribe((products) => {
@@ -37,56 +40,27 @@ export class ReportComponent implements OnInit {
     return this.transactions.filter((trans) => trans.productId === productId);
   }
 
-  // downloadPDF() {
-  //   const doc = new jsPDF();
+  downloadPDF(): void {
+    const header = ['Item Name', 'Available Quantity'];
+    const body = this.products.map(trans => {
+      return [trans.title, trans.quantity];
+    });
+    body.unshift(header);
 
-  //   const specialElementHandlers = {
-  //     '#editor': function (element, renderer) {
-  //       return true;
-  //     }
-  //   };
+    const docDefinition = {
+      content: [
+        {
+          layout: 'lightHorizontalLines', // optional
+          table: {
+            headerRows: 1,
+            widths: ['auto', 'auto'],
+            body
+          }
+        }
+      ]
+    };
 
-  //   const content = this.content.nativeElement;
+    this.pdfHelperService.downloadPdf(docDefinition);
+  }
 
-  //   doc.fromHTML(content.innerHTML, 15, 15, {
-  //     width: 190,
-  //     'elementHandlers': specialElementHandlers
-  //   });
-
-  //   doc.save('test.pdf');
-
-  // const doc = new jsPDF();
-
-  // var x = document.getElementById("myTd");
-  // x.innerHTML = 'vhjgfjh';
-
-  // const specialElementHandlers = {
-  //   '#editor': function (element, renderer) {
-  //     return true;
-  //   }
-  // };
-
-  // const pdfTable = this.pdfTable.nativeElement;
-
-  // doc.fromHTML(pdfTable.innerHTML, 15, 15, {
-  //   width: 190,
-  //   'elementHandlers': specialElementHandlers
-  // });
-
-  // let DATA = this.pdfTable.nativeElement;
-  // let doc = new jsPDF('p','pt', 'a4');
-
-  // let handleElement = {
-  //   '#editor':function(element,renderer){
-  //     return true;
-  //   }
-  // };
-  // doc.fromHTML(DATA.innerHTML,15,15,{
-  //   'width': 200,
-  //   'elementHandlers': handleElement
-  // });
-
-  // doc.save('angular-demo.pdf');
-  // }
-  // }
 }
